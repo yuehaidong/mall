@@ -1,0 +1,31 @@
+package com.imooc.mall.service;
+
+import com.github.pagehelper.PageInfo;
+import com.imooc.mall.exception.ImoocMallException;
+import com.imooc.mall.model.VO.CategoryVO;
+import com.imooc.mall.model.pojo.Category;
+import com.imooc.mall.model.pojo.Product;
+import com.imooc.mall.model.request.AddCategoryReq;
+import com.imooc.mall.model.request.AddProductReq;
+import com.imooc.mall.model.request.ProductListReq;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
+public interface ProductService {
+    void add(AddProductReq addProductReq);
+
+    void update(Product updateProduct);
+
+    void deleteProduct(Integer id);
+
+    void batchUpdateSellStatus(Integer[] ids, Integer sellStatus);
+
+    PageInfo listForAdmin(Integer pageNum, Integer pageSize);
+
+    Product detail(Integer id);
+
+    PageInfo list(ProductListReq productListReq);
+    void addProductByExcel(File destFile) throws IOException;
+}

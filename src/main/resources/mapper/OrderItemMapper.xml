@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imooc.mall.mapper.OrderItemMapper">
+   <insert id="insert" parameterType="com.imooc.mall.model.pojo.OrderItem">
+
+insert into imooc_mall_order_item (order_no,product_id,product_name,product_img,unit_price,quantity,total_price)
+values (#{orderNo},#{productId},#{productName},#{productImg},#{unitPrice},#{quantity},#{totalPrice})
+   </insert>
+    <select id="selectByOrderNo" parameterType="String" resultType="com.imooc.mall.model.pojo.OrderItem">
+        select * from imooc_mall_order_item where order_no=#{value}
+    </select>
+</mapper>

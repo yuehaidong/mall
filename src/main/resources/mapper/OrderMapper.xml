@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imooc.mall.mapper.OrderMapper">
+    <insert id="insertOrder" parameterType="com.imooc.mall.model.pojo.Order">
+        insert into imooc_mall_order (order_no,user_id,total_price,receiver_name,receiver_mobile,receiver_address
+        ,order_status,postage,payment_type) values (#{orderNo},#{userId},#{totalPrice},#{receiverName}
+        ,#{receiverMobile},#{receiverAdress},#{orderStatus},#{postage},#{paymentType})
+    </insert>
+    <update id="updateByOrderNo" parameterType="com.imooc.mall.model.pojo.Order">
+        update imooc_mall_order
+        <trim prefix="set" suffix="Where" suffixOverrides=",">
+            <if test="id !=null ">
+                id=#{id},
+            </if>
+            <if test="orderNo!=null">
+                order_no=#{orderNo},
+            </if>
+            <if test="userId!=null">
+                user_id=#{userId},
+            </if>
+            <if test="totalPrice!=null">
+                total_price=#{totalPrice},
+            </if>
+            <if test="receiverName!=null">
+                receiver_name=#{receiverName},
+            </if>
+            <if test="receiverMobile!=null">
+                receiver_mobile=#{receiverMobile},
+            </if>
+            <if test="receiverAdress!=null">
+                receiver_address=#{receiverAddress},
+            </if>
+            <if test="orderStatus!=null">
+                order_status=#{orderStatus},
+            </if>
+            <if test="postage!=null">
+                postage=#{postage},
+            </if>
+            <if test="paymentType!=null">
+                payment_type=#{paymentType},
+            </if>
+            <if test="deliveryTime!=null">
+                delivery_time=#{deliveryTime},
+            </if>
+            <if test="payTime!=null">
+                pay_time=#{payTime},
+            </if>
+            <if test="endTime!=null">
+                end_time=#{endTime},
+            </if>
+            <if test="createTime!=null">
+                create_time=#{createTime},
+            </if>
+        </trim>
+        id=#{id}
+    </update>
+    <select id="selectByOrderNo" parameterType="String" resultType="com.imooc.mall.model.pojo.Order">
+        select * from imooc_mall_order where order_no=#{value}
+    </select>
+    <select id="selectForCustomer" parameterType="Integer" resultType="com.imooc.mall.model.pojo.Order">
+        select * from imooc_mall_order where user_id = #{value} order by create_time desc
+    </select>
+    <select id="selectForAdmin" resultType="com.imooc.mall.model.pojo.Order">
+        select * from imooc_mall_order order by create_time desc
+    </select>
+    <resultMap id="listOrderStatisticsMap" type="com.imooc.mall.model.VO.OrderStatisticsVO">
+        <result column="days" property="days"/>
+        <result column="amount" property="amount"/>
+    </resultMap>
+    <select id="selectOrderStatistics" resultMap="listOrderStatisticsMap">
+        select date_format(from_unixtime(UNIX_TIMESTAMP(create_time)),"%Y-%m-%d") as days,count(*) as amount
+        from imooc_mall_order
+        <where>
+            <if test="query.startDate!=null">
+                <![CDATA[and create_time >=#{query.startDate}]]>
+            </if>
+            <if test="query.endDate!=null">
+                <![CDATA[and end_time <=#{query.endDate}]]>
+            </if>
+        </where>
+        group by days
+        order by days desc
+    </select>
+</mapper>

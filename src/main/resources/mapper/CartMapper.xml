@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imooc.mall.mapper.CartMapper">
+    <insert id="insertSlective" parameterType="com.imooc.mall.model.pojo.Cart">
+        insert into imooc_mall_cart (product_id,user_id,quantity,selected) values (#{productId},#{userId},#{quantity}
+        ,#{selected})
+
+    </insert>
+    <update id="updateById" parameterType="com.imooc.mall.model.pojo.Cart">
+        update imooc_mall_cart
+        set quantity=#{quantity},product_id=#{productId},user_id=#{userId},selected=#{selected}
+        where id=#{id}
+    </update>
+    <delete id="deleteById" parameterType="Integer">
+        delete from imooc_mall_cart where id=#{value}
+    </delete>
+
+
+    <select id="selectByUserIdAndProductId" parameterType="java.util.Map" resultType="com.imooc.mall.model.pojo.Cart">
+        select * from imooc_mall_cart where user_id=#{userId} and product_id=#{productId}
+    </select>
+    <select id="selectList" parameterType="Integer" resultType="com.imooc.mall.model.VO.CartVO">
+        select
+        c.id as id,
+        p.id as productId,
+        c.user_id as userId,
+        c.quantity as quantity,
+        c.selected as selected,
+        p.price as price,
+        p.name as productName,
+        p.image as productImage
+        from imooc_mall_cart c left join imooc_mall_product p on p.id=c.product_id
+        where c.user_id=#{userId} and p.status=1
+    </select>
+<!--当选择某一个时启用if，全选是不启用-->
+    <update id="selectOrNot" parameterType="java.util.Map">
+        update imooc_mall_cart
+        set selected=#{selected}
+        where user_id=#{userId}
+
+        <if test="productId!=null">
+          and product_id=#{productId}
+        </if>
+
+    </update>
+</mapper>

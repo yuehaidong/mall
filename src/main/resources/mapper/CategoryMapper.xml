@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imooc.mall.mapper.CategoryMapper">
+<!--    添加商品sql-->
+    <insert id="insertSelective" parameterType="com.imooc.mall.model.pojo.Category">
+        insert into imooc_mall_category (`name`,`type` ,parent_id,order_num) values (#{name},#{type},#{parentId},#{orderNum})
+    </insert>
+    <update id="updateByPrimarySelective" parameterType="com.imooc.mall.model.pojo.Category">
+--         加上set前缀，去除最后的逗号
+        UPDATE imooc_mall_category
+        <trim prefix="set" suffix="Where" suffixOverrides=",">
+        <if test="name !=null ">
+            name=#{name},
+        </if>
+        <if test="type!=null">
+            type=#{type},
+        </if>
+        <if test="parentId!=null">
+            parent_id=#{parentId},
+        </if>
+        <if test="orderNum!=null">
+            order_num=#{orderNum}
+        </if>
+        </trim>
+    id=#{id}
+
+    </update>
+    <delete id="deleteById" parameterType="Integer">
+        delete from imooc_mall_category where id=#{value}
+    </delete>
+    <!--查询是否重名-->
+    <select id="selectByName" parameterType="String" resultType="com.imooc.mall.model.pojo.Category">
+        select * from imooc_mall_category where name=#{value}
+    </select>
+
+    <select id="selectById" parameterType="Integer" resultType="com.imooc.mall.model.pojo.Category">
+        select * from imooc_mall_category where id=#{value}
+    </select>
+    <select id="selectList" resultType="com.imooc.mall.model.pojo.Category">
+        select * from imooc_mall_category
+    </select>
+
+    <select id="slectCategoriedsByParentId" parameterType="Integer" resultType="com.imooc.mall.model.pojo.Category">
+        select * from imooc_mall_category where parent_id=#{value}
+    </select>
+</mapper>

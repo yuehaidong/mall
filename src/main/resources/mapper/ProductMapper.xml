@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imooc.mall.mapper.ProductMapper">
+    <insert id="insertSelective" parameterType="com.imooc.mall.model.pojo.Product">
+        insert into imooc_mall_product (`name`,image,category_id,price,stock, status)
+        values (#{name},#{image},#{categoryId},#{price},#{stock},#{status})
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.imooc.mall.model.pojo.Product">
+        UPDATE imooc_mall_product
+        <trim prefix="set" suffix="Where" suffixOverrides=",">
+            <if test="name !=null ">
+                name=#{name},
+            </if>
+            <if test="image!=null">
+                image=#{image},
+            </if>
+            <if test="detail!=null">
+                detail=#{detail},
+            </if>
+            <if test="categoryId!=null">
+                category_id=#{categoryId},
+            </if>
+            <if test="price!=null">
+                price=#{price},
+            </if>
+            <if test="stock!=null">
+                stock=#{stock},
+            </if>
+            <if test="status!=null">
+                status=#{status},
+            </if>
+        </trim>
+        id=#{id}
+    </update>
+    <delete id="deleteById" parameterType="Integer">
+        delete from imooc_mall_product where id=#{value}
+    </delete>
+
+    <select id="selectByName" parameterType="String" resultType="com.imooc.mall.model.pojo.Product">
+        select * from imooc_mall_product where name=#{name}
+    </select>
+    <select id="selectById" parameterType="Integer" resultType="com.imooc.mall.model.pojo.Product">
+        select * from imooc_mall_product where id=#{value}
+    </select>
+
+
+    <update id="batchUpdateSellStatus" >
+        update imooc_mall_product set status=#{sellStatus}
+        where id in
+        <foreach collection="ids"  close=")" item="id" open="(" separator=",">
+            #{id}
+        </foreach>
+    </update>
+    <select id="selectListForAdmin" resultType="com.imooc.mall.model.pojo.Product">
+        select * from imooc_mall_product order by update_time desc
+    </select>
+    <select id="selectList" parameterType="com.imooc.mall.model.query.ProductListQuery" resultType="com.imooc.mall.model.pojo.Product">
+        select * from imooc_mall_product
+     <where>
+        <if test="keyword!=null">
+            and name like #{keyword}
+        </if>
+         <if test="categoryIds!=null">
+             and category_id in
+             <foreach collection="categoryIds"  close=")" item="item" open="(" separator=",">
+                 #{item}
+             </foreach>
+         </if>
+                and status=1
+
+    </where>
+    </select>
+</mapper>
